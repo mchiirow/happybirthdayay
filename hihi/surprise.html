@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Surprise!</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { display:flex; align-items:center; justify-content:center; min-height:100vh; background: linear-gradient(135deg,#ffefba,#ffd6a5); padding: 2rem; }
+
+    /* Letter box */
+    .letter {
+      background: rgba(255,255,255,0.95);
+      max-width: 720px;
+      width: 100%;
+      padding: 2rem 2.5rem;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      text-align: center;
+      font-family: 'Sacramento', cursive;
+      color: #333;
+    }
+
+    .letter h1 { font-size: 2.8rem; margin: 0 0 0.5rem 0; }
+    .letter .sub { font-size: 1.05rem; margin: 0 0 1.5rem 0; color: #444; }
+
+    /* Per-character animation for letter-by-letter reveal */
+    .char { display:inline-block; opacity:0; transform: translateY(6px); animation-fill-mode: both; -webkit-animation-fill-mode: both; }
+    @keyframes charFade {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* WebKit prefix for Safari/iOS */
+    @-webkit-keyframes charFade {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Back button (medium) */
+    a.back {
+      display:inline-block;
+      color:#fff;
+      background:#7b61ff;
+      padding:0.6rem 1rem;
+      font-size:1rem;
+      border-radius:6px;
+      text-decoration:none;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.18);
+    }
+
+    /* Reveal animation: fade + slide up, staggered */
+    .reveal { opacity: 0; transform: translateY(10px); animation-fill-mode: both; -webkit-animation-fill-mode: both; }
+    .reveal.reveal-1 { animation: fadeUp 1.4s ease forwards 0.3s; -webkit-animation: fadeUp 1.4s ease forwards 0.3s; }
+    .reveal.reveal-2 { animation: fadeUp 1.6s ease forwards 0.9s; -webkit-animation: fadeUp 1.6s ease forwards 0.9s; }
+    .reveal.reveal-3 { animation: fadeUp 1.2s ease forwards 1.6s; -webkit-animation: fadeUp 1.2s ease forwards 1.6s; }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @-webkit-keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="letter">
+    <h1 class="reveal reveal-1">Surprise!</h1>
+    <p class="sub" id="letterText">Hope you like it 🎉</p>
+    <a class="back reveal reveal-3" href="birthday.html">hehe</a>
+  </div>
+  <script>
+    // Split the paragraph text into spans and animate each character.
+    // Use Array.from to properly handle surrogate pairs (emoji) and
+    // replace spaces with non-breaking spaces so spacing is preserved.
+    document.addEventListener('DOMContentLoaded', function () {
+      var el = document.getElementById('letterText');
+      if (!el) return;
+      var text = el.textContent || '';
+      el.textContent = '';
+      el.style.whiteSpace = 'pre-wrap';
+  // small initial delay so heading reveal can finish
+  var initialDelay = 800; // ms (increased so typing starts after heading reveal)
+  var step = 80; // ms per character (slower typing)
+      var chars = Array.from(text);
+      for (var i = 0; i < chars.length; i++) {
+        var ch = chars[i];
+        var span = document.createElement('span');
+        span.className = 'char';
+        if (ch === ' ') {
+          span.innerHTML = '&nbsp;';
+        } else {
+          span.textContent = ch;
+        }
+        span.style.animation = 'charFade 0.45s ease forwards';
+        span.style.animationDelay = (initialDelay + i * step) + 'ms';
+        el.appendChild(span);
+      }
+    });
+  </script>
+</body>
+</html>
